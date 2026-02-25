@@ -59,7 +59,7 @@
   {\large \textbf{Report for CDA 3201L Lab \#4}}\\[2pt]
   {\large \textbf{Combinational Logic Design and Verilog HDL}}\\[8pt]
   \begin{tabular}{ll}
-    \textbf{Name:} Tuan Khang Phan & \textbf{UID:} 030382645 \\
+    \textbf{Name:} Tuan Khang Phan & \textbf{UID:} U30382645 \\
     \textbf{Name:} Huu Phat Nguyen & \textbf{UID:} U46082380 \\
   \end{tabular}
 \end{center}
@@ -163,22 +163,25 @@ cycling through the full truth table in binary order:
 The console output below confirms all eight input combinations match the expected
 truth table:
 
-\begin{lstlisting}[language={}, numbers=none, frame=single,
-                   caption={Simulation console output from Synopsys VCS.}]
-Starting simulation...
-
-Time    a    b    cin    sum    cout
-
- 0      0    0     0      0       0
-10      0    0     1      1       0
-20      0    1     0      1       0
-30      0    1     1      0       1
-40      1    0     0      1       0
-50      1    0     1      0       1
-60      1    1     0      0       1
-70      1    1     1      1       1
-$finish at simulation time 80
-\end{lstlisting}
+\begin{table}[H]
+  \centering
+  \caption{Simulation console output from Synopsys VCS.}
+  \label{tab:console}
+  \begin{tabular}{cccccc}
+    \toprule
+    Time & $a$ & $b$ & $c_{in}$ & $sum$ & $c_{out}$ \\
+    \midrule
+     0 & 0 & 0 & 0 & 0 & 0 \\
+    10 & 0 & 0 & 1 & 1 & 0 \\
+    20 & 0 & 1 & 0 & 1 & 0 \\
+    30 & 0 & 1 & 1 & 0 & 1 \\
+    40 & 1 & 0 & 0 & 1 & 0 \\
+    50 & 1 & 0 & 1 & 0 & 1 \\
+    60 & 1 & 1 & 0 & 0 & 1 \\
+    70 & 1 & 1 & 1 & 1 & 1 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \subsection{Simulation Waveform}
 
