@@ -139,54 +139,24 @@ The handwritten solutions for Questions 1, 2, and 3 are included below.
 The structural Verilog module below implements the optimized full adder using the
 gate-level primitives \texttt{xor} and \texttt{nand}:
 
-\begin{lstlisting}[caption={Verilog module for the optimized full adder.},
-                   label={lst:module}]
-module full_adder(a, b, cin, sum, cout);
-    input  a, b, cin;
-    output sum, cout;
-    wire   x, n1, n2;
-
-    xor  (x,    a,  b  );   // x    = a XOR b
-    xor  (sum,  x,  cin);   // sum  = (a XOR b) XOR cin
-    nand (n1,   a,  b  );   // n1   = NAND(a, b)
-    nand (n2,   x,  cin);   // n2   = NAND(a XOR b, cin)
-    nand (cout, n1, n2 );   // cout = NAND(n1, n2)
-endmodule
-\end{lstlisting}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{design.jpg}
+  \caption{Verilog module for the optimized full adder.}
+  \label{lst:module}
+\end{figure}
 
 \subsection{Verilog Testbench}
 
 The testbench exercises all eight input combinations in sequential 10-time-unit steps,
 cycling through the full truth table in binary order:
 
-\begin{lstlisting}[caption={Testbench for the full adder module.},
-                   label={lst:tb}]
-module full_adder_tb();
-    reg  a, b, cin;
-    wire sum, cout;
-
-    full_adder U0(a, b, cin, sum, cout);
-
-    initial begin
-        $dumpfile("test.vcd");
-        $dumpvars;
-        $display("Starting simulation...\n");
-        $display("Time\ta\tb\tcin\tcout\tsum\n");
-        $monitor("%2d\t%d\t%d\t%d\t%d\t%d",
-                 $time, a, b, cin, cout, sum);
-
-        a = 0; b = 0; cin = 0;   //  0: a=0 b=0 cin=0
-        #10 cin = 1;              // 10: a=0 b=0 cin=1
-        #10 cin = 0; b = 1;       // 20: a=0 b=1 cin=0
-        #10 cin = 1;              // 30: a=0 b=1 cin=1
-        #10 cin = 0; b = 0; a = 1;// 40: a=1 b=0 cin=0
-        #10 cin = 1;              // 50: a=1 b=0 cin=1
-        #10 cin = 0; b = 1;       // 60: a=1 b=1 cin=0
-        #10 cin = 1;              // 70: a=1 b=1 cin=1
-        #10 $finish;
-    end
-endmodule
-\end{lstlisting}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\linewidth]{test_bench_1.jpg}
+  \caption{Testbench for the full adder module.}
+  \label{lst:tb}
+\end{figure}
 
 \subsection{Simulation Console Output}
 
