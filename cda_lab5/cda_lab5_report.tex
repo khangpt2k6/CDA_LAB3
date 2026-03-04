@@ -188,18 +188,46 @@ module mux_4to1_tb();
 endmodule
 \end{lstlisting}
 
-% TODO: Insert console output screenshot and waveform screenshot here
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.95\linewidth]{console_output.jpg}
-% \caption{Console output from the 4-to-1 mux testbench simulation.}
-% \end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{design.png}
+\caption{Verilog design module for the 2-to-1 and 4-to-1 multiplexers.}
+\end{figure}
 
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.95\linewidth]{waveform.jpg}
-% \caption{Waveform from the 4-to-1 mux testbench simulation.}
-% \end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{test_bench.png}
+\caption{Testbench code used to verify the 4-to-1 multiplexer across all 64 input combinations.}
+\end{figure}
+
+The simulation was run and all 64 test cases passed. A portion of the console output is shown below:
+
+\begin{lstlisting}[language={}, basicstyle=\ttfamily\footnotesize]
+VCD info: dumpfile wave.vcd opened for output.
+ time  S1S0  I3I2I1I0  Q_discrete  Y_ref  EQ  expected  PASS?
+-------------------------------------------------------------
+   1    00     0000        0         0     1     0       PASS
+   2    01     0000        0         0     1     0       PASS
+   3    10     0000        0         0     1     0       PASS
+   4    11     0000        0         0     1     0       PASS
+   5    00     0001        1         1     1     1       PASS
+   6    01     0001        0         0     1     0       PASS
+   7    10     0001        0         0     1     0       PASS
+   8    11     0001        0         0     1     0       PASS
+  ...
+  61    00     1111        1         1     1     1       PASS
+  62    01     1111        1         1     1     1       PASS
+  63    10     1111        1         1     1     1       PASS
+  64    11     1111        1         1     1     1       PASS
+Done.
+testbench.sv:49: $finish called at 64 (1s)
+\end{lstlisting}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\linewidth]{waveform.png}
+\caption{Simulation waveform showing the 4-to-1 multiplexer output across all input combinations.}
+\end{figure}
 
 \subsection{Physical Circuit Testing}
 
@@ -234,13 +262,13 @@ The LED turned on for $S_1S_0 = 00$ and $S_1S_0 = 10$, and stayed off for $S_1S_
 
 \section{Lab Assignment Questions}
 
-\subsection{Why is hierarchical design important?}
+\textbf{Question 1)} \underline{Why is hierarchical design important, both when writing HDL code, and when implementing physical circuits? What are the benefits and potential drawbacks?}
 
 Hierarchical design lets us break a big circuit into smaller pieces that are easier to build and test on their own. In Verilog, for example, we wrote a simple 2-to-1 mux and reused it three times to make a 4-to-1 mux. If one of those sub-modules has a bug, we can test it in isolation instead of debugging the whole thing at once. On the physical side, using ICs like the 74LS153N means we do not have to wire up dozens of individual gates, which saves breadboard space and reduces wiring mistakes.
 
 The main benefit is reusability. Once a sub-module is tested and working, you can use it in many different designs without starting from scratch. The potential drawback is that a hierarchical design might not be as optimized as a flat one. For instance, building a 4-to-1 mux from three 2-to-1 muxes uses more gates than the minimum SOP implementation. There is also a learning curve when it comes to understanding how all the modules connect together, especially in larger designs.
 
-\subsection{Using decoders to realize SOP functions}
+\textbf{Question 2)} \underline{Explain how a decoder with active high/low outputs can be used to realize any SOP, or multiple SOP functions simultaneously. What are the limitations?}
 
 With an active HIGH decoder, each output corresponds to exactly one minterm. To implement any SOP function, we just OR together the decoder outputs for the minterms we need. For example, if $f(a,b,c) = \sum m(5,6,7)$, we connect outputs 5, 6, and 7 of a 3-to-8 decoder to an OR gate. We can even implement multiple functions from the same decoder by using different OR gates connected to different subsets of outputs.
 
@@ -248,7 +276,7 @@ With an active LOW decoder (where the selected output goes to 0 and all others s
 
 The main limitation is fan-out. Each decoder output can only drive a certain number of gate inputs before the signal degrades. If we try to connect one output to too many OR or NAND gates for different functions, it may exceed the drive strength of that output. Also, for functions with many variables, the decoder size grows exponentially ($2^n$ outputs for $n$ inputs), which becomes impractical for large $n$.
 
-\subsection{Constructing an 8-to-1 mux from 4-to-1 muxes}
+\textbf{Question 3)} \underline{How would you construct an 8-to-1 mux using 4-to-1 muxes?}
 
 We would use two 4-to-1 muxes and one 2-to-1 mux. The first 4-to-1 mux takes inputs $I_0$ through $I_3$ and uses $S_0$ and $S_1$ as its select lines. The second 4-to-1 mux takes inputs $I_4$ through $I_7$ with the same $S_0$ and $S_1$ select lines. Then the outputs of these two muxes go into a 2-to-1 mux that uses $S_2$ as its select line. When $S_2 = 0$, the output comes from the first group (inputs 0 through 3), and when $S_2 = 1$, it comes from the second group (inputs 4 through 7). This gives us a complete 8-to-1 selection with three select bits.
 
