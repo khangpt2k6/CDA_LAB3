@@ -81,17 +81,23 @@ For the Verilog part, we wrote a simple 2-to-1 mux module and instantiated it th
 For a 2-to-1 multiplexer with data inputs A and B and select line S:
 
 \begin{center}
-  \begin{tabular}{|c|c|}
+  \begin{tabular}{|c|c|c|c|}
     \hline
-    S & Output \\
+    S & A & B & Y \\
     \hline
-    0 & A \\
-    1 & B \\
+    0 & 0 & 0 & 0 \\
+    0 & 0 & 1 & 0 \\
+    0 & 1 & 0 & 1 \\
+    0 & 1 & 1 & 1 \\
+    1 & 0 & 0 & 0 \\
+    1 & 0 & 1 & 1 \\
+    1 & 1 & 0 & 0 \\
+    1 & 1 & 1 & 1 \\
     \hline
   \end{tabular}
 \end{center}
 
-The SOP expression is: $Y = \overline{S} \cdot A + S \cdot B$
+When $S = 0$, the output follows A regardless of B. When $S = 1$, the output follows B regardless of A. The SOP expression is: $Y = \overline{S} \cdot A + S \cdot B$
 
 For a 4-to-1 multiplexer with data inputs $I_0$, $I_1$, $I_2$, $I_3$ and select lines $S_1$ and $S_0$:
 
