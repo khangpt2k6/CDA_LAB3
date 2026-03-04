@@ -135,58 +135,7 @@ In total, the entire setup used 5 ICs for the custom mux and comparator: 1 x 74L
 
 \subsection{Verilog Implementation}
 
-The 2-to-1 multiplexer module:
-
-\begin{lstlisting}
-module mux_2to1(
-  input A, B, S,
-  output Y
-);
-  assign Y = (~S & A) | (S & B);
-endmodule
-\end{lstlisting}
-
-The 4-to-1 multiplexer built from three 2-to-1 mux instances. The first two muxes each handle a pair of inputs using $S_0$ as the select, and the third mux picks between those two results using $S_1$:
-
-\begin{lstlisting}
-module mux_4to1(
-  input I0, I1, I2, I3, S0, S1,
-  output Y
-);
-  wire mux0_out, mux1_out;
-
-  mux_2to1 U1(.A(I0), .B(I1), .S(S0), .Y(mux0_out));
-  mux_2to1 U2(.A(I2), .B(I3), .S(S0), .Y(mux1_out));
-  mux_2to1 U3(.A(mux0_out), .B(mux1_out), .S(S1), .Y(Y));
-endmodule
-\end{lstlisting}
-
-The testbench cycles through all 64 possible combinations of the 6 inputs:
-
-\begin{lstlisting}
-module mux_4to1_tb();
-  reg I0, I1, I2, I3, S0, S1;
-  wire Y;
-  integer i;
-
-  mux_4to1 UUT(.I0(I0), .I1(I1), .I2(I2), .I3(I3),
-               .S0(S0), .S1(S1), .Y(Y));
-
-  initial begin
-    $dumpfile("mux_test.vcd");
-    $dumpvars;
-    $display("Time\tS1 S0\tI0 I1 I2 I3\tY");
-    $monitor("%3d\t%b  %b\t%b  %b  %b  %b\t%b",
-             $time, S1, S0, I0, I1, I2, I3, Y);
-
-    for (i = 0; i < 64; i = i + 1) begin
-      {S1, S0, I0, I1, I2, I3} = i;
-      #10;
-    end
-    $finish;
-  end
-endmodule
-\end{lstlisting}
+The design implements a 2-to-1 mux module and uses three instances of it to build the 4-to-1 mux hierarchically. The first two instances handle pairs of inputs using $S_0$ as the select, and the third picks between their outputs using $S_1$. The testbench cycles through all 64 possible combinations of the 6 inputs.
 
 \begin{figure}[H]
 \centering
